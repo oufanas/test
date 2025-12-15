@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vue Básico - Estado de Ánimo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, sans-serif;
+
+      /* 🌈 BACKGROUND DIFERENTE */
+      background: linear-gradient(135deg, #facc15, #fb7185, #6366f1);
+      color: #0f172a;
+    }
+
+    .card {
+      width: min(420px, 100%);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 30px 60px rgba(0,0,0,.3);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .emoji {
+      font-size: 80px;
+      margin: 20px 0;
+    }
+
+    button {
+      margin: 6px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+      cursor: pointer;
+      background: #6366f1;
+      color: white;
+    }
+
+    .hint {
+      margin-top: 14px;
+      font-size: 14px;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Vue controla este div -->
+  <div id="app" class="card">
+    <h1>¿Cómo te sientes?</h1>
+
+    <div class="emoji">
+      {{ emoji }}
+    </div>
+
+    <div>
+      <button @click="mood = 'happy'">😊 Feliz</button>
+      <button @click="mood = 'cool'">😎 Chill</button>
+      <button @click="mood = 'angry'">😡 Enfadado</button>
+      <button @click="mood = 'tired'">😴 Cansado</button>
+    </div>
+
+    <p class="hint">
+      Vue actualiza la vista automáticamente usando <code>data</code> y <code>computed</code>.
+    </p>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          mood: "happy"
+        };
+      },
+      computed: {
+        emoji() {
+          if (this.mood === "happy") return "😊";
+          if (this.mood === "cool") return "😎";
+          if (this.mood === "angry") return "😡";
+          if (this.mood === "tired") return "😴";
+          return "🙂";
+        }
+      }
+    }).mount("#app");
+  </script>
+
+</body>
+</html>
