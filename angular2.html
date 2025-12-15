@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Observables con RxJS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- RxJS -->
+  <script src="https://unpkg.com/rxjs@7/dist/bundles/rxjs.umd.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(135deg, #22c55e, #3b82f6);
+      color: #0f172a;
+    }
+
+    .app {
+      width: min(520px, 100%);
+      background: rgba(255,255,255,.9);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 30px 60px rgba(0,0,0,.3);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: 1px solid #cbd5f5;
+    }
+
+    button {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: none;
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .value {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 6px;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #334155;
+      text-align: center;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <h1>📡 Observables (RxJS)</h1>
+
+    <!-- 1. Tiempo -->
+    <div class="card">
+      <h3>⏱️ Tiempo (interval)</h3>
+      <div class="value" id="time">0</div>
+    </div>
+
+    <!-- 2. Eventos -->
+    <div class="card">
+      <h3>🖱️ Eventos de usuario (fromEvent)</h3>
+      <button id="btn">Click aquí</button>
+      <div class="value">Clicks: <span id="clicks">0</span></div>
+    </div>
+
+    <!-- 3. API -->
+    <div class="card">
+      <h3>🌍 Datos de una API (Random User)</h3>
+      <div class="value" id="user">Cargando usuario...</div>
+    </div>
+
+    <p class="hint">
+      Cada observable emite datos asíncronos y la vista se actualiza automáticamente.
+    </p>
+  </div>
+
+  <script>
+    const { interval, fromEvent, from } = rxjs;
+
+    /* ===============================
+       1️⃣ Observable de TIEMPO
+       =============================== */
+    interval(1000).subscribe(seconds => {
+      document.getElementById("time").textContent = seconds;
+    });
+
+    /* ===============================
+       2️⃣ Observable de EVENTOS
+       =============================== */
+    const button = document.getElementById("btn");
+    const clicks$ = fromEvent(button, "click");
+
+    let count = 0;
+    clicks$.subscribe(() => {
+      count++;
+      document.getElementById("clicks").textContent = count;
+    });
+
+    /* ===============================
+       3️⃣ Observable de API (fetch)
+       =============================== */
+    const user$ = from(
+      fetch("https://randomuser.me/api/")
+        .then(res => res.json())
+    );
+
+    user$.subscribe(data => {
+      const user = data.results[0];
+      document.getElementById("user").textContent =
+        `${user.name.first} ${user.name.last} (${user.location.country})`;
+    });
+  </script>
+
+</body>
+</html>
