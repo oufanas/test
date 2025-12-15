@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>React Básico - Lista de Tareas</title>
+  <title>React Básico - Generador de Colores</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- React -->
@@ -14,87 +14,64 @@
 
   <style>
     body {
+      margin: 0;
       min-height: 100vh;
       display: grid;
       place-items: center;
-      background: linear-gradient(135deg, #0f172a, #020617);
       font-family: system-ui, sans-serif;
-      color: #e5e7eb;
-      margin: 0;
+
+      /* 🎨 BACKGROUND DIFERENTE */
+      background: radial-gradient(circle at top left, #22d3ee, #6366f1, #0f172a);
+      color: #0f172a;
     }
 
-    .app {
-      width: min(450px, 100%);
-      background: #020617;
-      border: 1px solid #334155;
-      border-radius: 16px;
+    .card {
+      width: min(420px, 100%);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
       padding: 20px;
-      box-shadow: 0 25px 50px rgba(0,0,0,.5);
+      box-shadow: 0 30px 60px rgba(0,0,0,.25);
+      text-align: center;
     }
 
     h1 {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid #475569;
-      background: #020617;
-      color: white;
-      font-size: 16px;
       margin-bottom: 10px;
     }
 
-    button {
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
+    .color-box {
+      height: 120px;
+      border-radius: 16px;
+      margin: 16px 0;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.1);
     }
 
-    .add {
+    input[type="range"] {
       width: 100%;
-      background: #2563eb;
-      color: white;
-      margin-bottom: 16px;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    li {
+    .values {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 8px;
-      border-radius: 10px;
-      margin-bottom: 6px;
-      background: #020617;
-      border: 1px solid #334155;
+      font-size: 14px;
+      margin-top: 6px;
     }
 
-    .done {
-      text-decoration: line-through;
-      color: #94a3b8;
-    }
-
-    .delete {
-      background: #7c2d12;
+    button {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: none;
+      background: #6366f1;
       color: white;
+      font-size: 15px;
+      cursor: pointer;
     }
 
     .hint {
       margin-top: 12px;
       font-size: 14px;
-      text-align: center;
-      color: #93c5fd;
+      color: #334155;
     }
   </style>
 </head>
@@ -104,59 +81,43 @@
 
   <script type="text/babel">
     function App() {
-      const [tasks, setTasks] = React.useState([]);
-      const [text, setText] = React.useState("");
+      const [r, setR] = React.useState(120);
+      const [g, setG] = React.useState(180);
+      const [b, setB] = React.useState(220);
 
-      function addTask() {
-        if (text.trim() === "") return;
-        setTasks([...tasks, { text, done: false }]);
-        setText("");
+      function randomColor() {
+        setR(Math.floor(Math.random() * 256));
+        setG(Math.floor(Math.random() * 256));
+        setB(Math.floor(Math.random() * 256));
       }
 
-      function toggleTask(index) {
-        const newTasks = [...tasks];
-        newTasks[index].done = !newTasks[index].done;
-        setTasks(newTasks);
-      }
-
-      function deleteTask(index) {
-        setTasks(tasks.filter((_, i) => i !== index));
-      }
+      const color = `rgb(${r}, ${g}, ${b})`;
 
       return (
-        <div className="app">
-          <h1>📝 Lista de Tareas</h1>
+        <div className="card">
+          <h1>🎨 Generador de Color</h1>
 
-          <input
-            placeholder="Escribe una tarea..."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+          <div
+            className="color-box"
+            style={{ background: color }}
           />
 
-          <button className="add" onClick={addTask}>
-            Añadir tarea
+          <input type="range" min="0" max="255" value={r} onChange={e => setR(e.target.value)} />
+          <input type="range" min="0" max="255" value={g} onChange={e => setG(e.target.value)} />
+          <input type="range" min="0" max="255" value={b} onChange={e => setB(e.target.value)} />
+
+          <div className="values">
+            <span>R: {r}</span>
+            <span>G: {g}</span>
+            <span>B: {b}</span>
+          </div>
+
+          <button onClick={randomColor}>
+            🎲 Color aleatorio
           </button>
 
-          <ul>
-            {tasks.map((task, index) => (
-              <li key={index}>
-                <span
-                  className={task.done ? "done" : ""}
-                  onClick={() => toggleTask(index)}
-                  style={{ cursor: "pointer" }}
-                >
-                  {task.text}
-                </span>
-
-                <button className="delete" onClick={() => deleteTask(index)}>
-                  ✖
-                </button>
-              </li>
-            ))}
-          </ul>
-
           <p className="hint">
-            React usa <code>useState</code> para actualizar la UI automáticamente.
+            React actualiza el color automáticamente usando estado.
           </p>
         </div>
       );
